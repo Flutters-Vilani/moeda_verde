@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "652524923023",
+    "project_id": "moeda-verde-fausta-hom",
+    "storage_bucket": "moeda-verde-fausta-hom.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:652524923023:android:4f7cbf9e8163d55dece8fa",
+        "android_client_info": {
+          "package_name": "com.example.moeda_verde"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAGPGwhKGu50w91t5tVCZivwstBtu-wGuE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
