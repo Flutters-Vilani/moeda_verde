@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:moeda_verde/views/home/home.dart';
+import 'package:moeda_verde/views/utils/input.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -24,19 +25,32 @@ class _LoginState extends State<Login> {
           .get();
 
       if (query.docs.isNotEmpty) {
-        // Usuário encontrado
-        print("Usuário autenticado: ${query.docs.first.data()}");
-
-        Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => Home()));
+        Navigator.of(context)
+            .pushReplacement(MaterialPageRoute(builder: (ctx) => Home()));
         return true;
       } else {
-        // Nenhum usuário com esse nome e senha
-        print("Usuário não encontrado");
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              "Usuário não encontrado. O nome ou senha estão errados!",
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            backgroundColor: Colors.red,
+          ),
+        );
 
         return false;
       }
     } catch (e) {
-      print("Erro ao autenticar: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            "Não foi possível fazer a autenticação. Verifique sua internet!",
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          backgroundColor: Colors.red,
+        ),
+      );
       return false;
     }
   }
@@ -44,31 +58,49 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          TextField(
-            controller: nome,
-            decoration: InputDecoration(hintText: 'Nome'),
-          ),
-          TextField(
-            controller: senha,
-            decoration: InputDecoration(hintText: 'Senha'),
-          ),
-          GestureDetector(
-            onTap: () {
-              autentica(nome.text, senha.text);
-            },
-            child: Container(
-              alignment: Alignment.center,
-              margin: EdgeInsets.only(top: 20),
-              width: double.maxFinite,
-              height: 50,
-              decoration: BoxDecoration(color: Colors.blue),
-              child: Text("Entrar"),
+      body: Padding(
+        padding: EdgeInsets.all(6),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Input(
+              controller: nome,
+              hintText: 'Nome',
+              obscure: false,
             ),
-          )
-        ],
+            SizedBox(
+              height: 10,
+            ),
+            Input(
+              controller: senha,
+              hintText: 'Senha',
+              obscure: true,
+              tipoInput: "password",
+            ),
+            GestureDetector(
+              onTap: () {
+                autentica(nome.text, senha.text);
+              },
+              child: Container(
+                alignment: Alignment.center,
+                margin: EdgeInsets.only(top: 20),
+                width: double.maxFinite,
+                height: 50,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+                child: Text(
+                  "Entrar",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

@@ -18,6 +18,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
@@ -38,7 +39,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
   dynamic users = [];
 
   lerDados() async {
@@ -47,12 +47,6 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         users = event.docs;
       });
-    });
-  }
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
     });
   }
 
@@ -86,11 +80,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 })
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
       ),
     );
   }
