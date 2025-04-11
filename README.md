@@ -20,7 +20,7 @@ windows   1:652524923023:web:8620b81474f1c0b7ece8fa
 
 4º flutter pub add firebase_core -> instalar a dependencia para usarmos o arquivo firebase_options
 
-5º flutterfire configure -> execute o comando para garantir que o Firebase esteja atualizado
+5º flutterfire configure --project=moeda-verde-fausta-hom -> execute o comando para garantir que o Firebase esteja atualizado
 
 6º add imports na main.dart:
 import 'package:firebase_core/firebase_core.dart';

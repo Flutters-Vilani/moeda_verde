@@ -1,6 +1,7 @@
-// import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:moeda_verde/views/login/login.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: Login(),
     );
   }
 }
@@ -38,15 +39,16 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  dynamic users = [];
 
-  // lerDados() async {
-  //   FirebaseFirestore db = FirebaseFirestore.instance;
-  //   await db.collection("usuarios").get().then((event) {
-  //     for (var doc in event.docs) {
-  //       print("${doc.id} => ${doc.data()}");
-  //     }
-  //   });
-  // }
+  lerDados() async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    await db.collection("usuarios").get().then((event) {
+      setState(() {
+        users = event.docs;
+      });
+    });
+  }
 
   void _incrementCounter() {
     setState(() {
@@ -65,13 +67,23 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+            GestureDetector(
+              onTap: () async {
+                lerDados();
+              },
+              child: Text("Listar"),
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
+            ListView.builder(
+                shrinkWrap: true,
+                itemCount: users.length,
+                itemBuilder: (ctx, index) {
+                  return Text(
+                    users[index]['nome'],
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  );
+                })
           ],
         ),
       ),

@@ -85,4 +85,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'moeda-verde-fausta-hom.firebasestorage.app',
     measurementId: 'G-5B9BXW9HPJ',
   );
+
 }
