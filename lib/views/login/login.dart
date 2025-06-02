@@ -1,7 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:moeda_verde/views/home/home.dart';
+import 'package:moeda_verde/teste.dart';
+// import 'package:moeda_verde/views/home/home.dart';
 import 'package:moeda_verde/views/utils/input.dart';
+
+import '../home/home.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -14,46 +17,46 @@ class _LoginState extends State<Login> {
   TextEditingController nome = TextEditingController();
   TextEditingController senha = TextEditingController();
 
-  Future<bool> autentica(String nome, String senha) async {
-    try {
-      FirebaseFirestore db = FirebaseFirestore.instance;
+  // Future<bool> autentica(String nome, String senha) async {
+  //   try {
+  //     FirebaseFirestore db = FirebaseFirestore.instance;
 
-      QuerySnapshot query = await db
-          .collection("usuarios")
-          .where("nome", isEqualTo: nome)
-          .where("senha", isEqualTo: senha)
-          .get();
+  //     // QuerySnapshot query = await db
+  //     //     .collection("usuarios")
+  //     //     .where("nome", isEqualTo: nome)
+  //     //     .where("senha", isEqualTo: senha)
+  //     //     .get();
 
-      if (query.docs.isNotEmpty) {
-        Navigator.of(context)
-            .pushReplacement(MaterialPageRoute(builder: (ctx) => Home()));
-        return true;
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(
-              "Usuário não encontrado. O nome ou senha estão errados!",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            backgroundColor: Colors.red,
-          ),
-        );
+  //     if (query.docs.isNotEmpty) {
+  //       Navigator.of(context)
+  //           .pushReplacement(MaterialPageRoute(builder: (ctx) => Home()));
+  //       return true;
+  //     } else {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         const SnackBar(
+  //           content: Text(
+  //             "Usuário não encontrado. O nome ou senha estão errados!",
+  //             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+  //           ),
+  //           backgroundColor: Colors.red,
+  //         ),
+  //       );
 
-        return false;
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            "Não foi possível fazer a autenticação. Verifique sua internet!",
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-          backgroundColor: Colors.red,
-        ),
-      );
-      return false;
-    }
-  }
+  //       return false;
+  //     }
+  //   } catch (e) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(
+  //         content: Text(
+  //           "Não foi possível fazer a autenticação. Verifique sua internet!",
+  //           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+  //         ),
+  //         backgroundColor: Colors.red,
+  //       ),
+  //     );
+  //     return false;
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +82,9 @@ class _LoginState extends State<Login> {
             ),
             GestureDetector(
               onTap: () {
-                autentica(nome.text, senha.text);
+                // autentica(nome.text, senha.text);
+                Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (ctx) => Home()));
               },
               child: Container(
                 alignment: Alignment.center,
