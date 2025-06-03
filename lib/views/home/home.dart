@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 
@@ -9,7 +11,32 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  dynamic products = """
+[
+  {
+    "id": 1,
+    "name": "Alface",
+    "price": 10.00,
+    "image": "https://example.com/alface.png"
+  },
+  {
+    "id": 2,
+    "name": "Tomate",
+    "price": 5.00,
+    "image": "https://example.com/tomate.png"
+  }
+]
+""";
+
   List cart = [];
+
+  @override
+  void initState() {
+    products = jsonDecode(products);
+
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,67 +58,107 @@ class _HomeState extends State<Home> {
                   ],
                 ),
                 builder: (p0) {
-                  return SizedBox(
-                    height: 450,
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          width: double.maxFinite,
-                          height: 350,
-                          child: ListView.builder(
-                            shrinkWrap: true,
-                            padding: const EdgeInsets.only(bottom: 20),
-                            itemCount: 2,
-                            itemBuilder: (context, index) {
-                              return Text("Teste");
-                            },
-                          ),
+                  return StatefulBuilder(
+                    builder: (context, setStateDialog) {
+                      return SizedBox(
+                        height: 450,
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              width: double.maxFinite,
+                              height: 350,
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                padding: const EdgeInsets.only(bottom: 20),
+                                itemCount: cart.length,
+                                itemBuilder: (context, index) {
+                                  return Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                        child: Card(
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(cart[index]['name']
+                                                    .toString()),
+                                                Text(
+                                                    "R\$ ${cart[index]['price'].toString()},00"),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      IconButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              cart.removeAt(index);
+                                            });
+                                            setStateDialog(() {});
+
+                                            if (cart.isEmpty) {
+                                              finish(context);
+                                            }
+                                          },
+                                          icon:
+                                              Icon(Icons.remove_circle_outline))
+                                    ],
+                                  );
+                                },
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                print(cart.toString());
+                                setState(() {
+                                  cart = [];
+                                });
+                                finish(context);
+                              },
+                              child: Container(
+                                alignment: Alignment.center,
+                                padding: EdgeInsets.all(12),
+                                width: double.maxFinite,
+                                decoration: BoxDecoration(
+                                  color: Colors.green,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Text(
+                                  "COMPRAR",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                finish(context);
+                              },
+                              child: Container(
+                                alignment: Alignment.center,
+                                padding: EdgeInsets.all(12),
+                                width: double.maxFinite,
+                                decoration: BoxDecoration(
+                                  color: Colors.red,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Text(
+                                  "FECHAR",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                            )
+                          ],
                         ),
-                        GestureDetector(
-                          onTap: () {
-                            print(cart.toString());
-                            setState(() {
-                              cart = [];
-                            });
-                            finish(context);
-                          },
-                          child: Container(
-                            alignment: Alignment.center,
-                            padding: EdgeInsets.all(12),
-                            width: double.maxFinite,
-                            decoration: BoxDecoration(
-                              color: Colors.green,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Text(
-                              "COMPRAR",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            finish(context);
-                          },
-                          child: Container(
-                            alignment: Alignment.center,
-                            padding: EdgeInsets.all(12),
-                            width: double.maxFinite,
-                            decoration: BoxDecoration(
-                              color: Colors.red,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Text(
-                              "FECHAR",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
+                      );
+                    },
                   );
                 },
               );
@@ -148,7 +215,7 @@ class _HomeState extends State<Home> {
             ),
           ),
           ListView.builder(
-            itemCount: 2,
+            itemCount: products.length,
             shrinkWrap: true,
             itemBuilder: (ctx, index) {
               return Card(
@@ -159,15 +226,22 @@ class _HomeState extends State<Home> {
                     children: [
                       // imagem
                       Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Alface"),
-                          Text("R\$ 10,00"),
+                          Text(products[index]['name']),
+                          Text(
+                            "R\$ ${products[index]['price'].toStringAsFixed(2)}",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.green,
+                            ),
+                          ),
                         ],
                       ),
                       IconButton(
                         onPressed: () {
                           setState(() {
-                            cart.add(index);
+                            cart.add(products[index]);
                           });
                         },
                         icon: Icon(Icons.add_outlined),
