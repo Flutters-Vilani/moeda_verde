@@ -29,6 +29,8 @@ class _HomeState extends State<Home> {
 """;
 
   List cart = [];
+  dynamic valueTotal = 0;
+  dynamic saldo = 100.0;
 
   @override
   void initState() {
@@ -45,6 +47,10 @@ class _HomeState extends State<Home> {
         actions: [
           IconButton(
             onPressed: () {
+              valueTotal = 0;
+              for (var i = 0; i < cart.length; i++) {
+                valueTotal += cart[i]["price"];
+              }
               showInDialog(
                 context,
                 title: Column(
@@ -61,12 +67,13 @@ class _HomeState extends State<Home> {
                   return StatefulBuilder(
                     builder: (context, setStateDialog) {
                       return SizedBox(
-                        height: 450,
+                        height: 550,
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             SizedBox(
                               width: double.maxFinite,
-                              height: 350,
+                              height: 400,
                               child: ListView.builder(
                                 shrinkWrap: true,
                                 padding: const EdgeInsets.only(bottom: 20),
@@ -88,7 +95,7 @@ class _HomeState extends State<Home> {
                                                 Text(cart[index]['name']
                                                     .toString()),
                                                 Text(
-                                                    "R\$ ${cart[index]['price'].toString()},00"),
+                                                    "R\$ ${cart[index]['price'].toString().replaceAll(".0", ",00")}"),
                                               ],
                                             ),
                                           ),
@@ -98,6 +105,13 @@ class _HomeState extends State<Home> {
                                           onPressed: () {
                                             setState(() {
                                               cart.removeAt(index);
+
+                                              valueTotal = 0;
+                                              for (var i = 0;
+                                                  i < cart.length;
+                                                  i++) {
+                                                valueTotal += cart[i]["price"];
+                                              }
                                             });
                                             setStateDialog(() {});
 
@@ -112,47 +126,148 @@ class _HomeState extends State<Home> {
                                 },
                               ),
                             ),
-                            GestureDetector(
-                              onTap: () {
-                                print(cart.toString());
-                                setState(() {
-                                  cart = [];
-                                });
-                                finish(context);
-                              },
-                              child: Container(
-                                alignment: Alignment.center,
-                                padding: EdgeInsets.all(12),
-                                width: double.maxFinite,
-                                decoration: BoxDecoration(
-                                  color: Colors.green,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Text(
-                                  "COMPRAR",
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                finish(context);
-                              },
-                              child: Container(
-                                alignment: Alignment.center,
-                                padding: EdgeInsets.all(12),
-                                width: double.maxFinite,
-                                decoration: BoxDecoration(
-                                  color: Colors.red,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Text(
-                                  "FECHAR",
-                                  style: TextStyle(color: Colors.white),
-                                ),
+                            Container(
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "TOTAL: ",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Text(
+                                        "R\$ ${valueTotal.toString().replaceAll(".0", ",00")}",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 15,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      if (saldo >= valueTotal) {
+                                        setState(() {
+                                          cart = [];
+
+                                          saldo = saldo - valueTotal;
+                                        });
+                                        finish(context);
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                            content: Text(
+                                              "Compra realizada com sucesso!",
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            backgroundColor: Colors.green,
+                                          ),
+                                        );
+                                        showInDialog(
+                                          context,
+                                          title: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                "Código para retirada:",
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ],
+                                          ),
+                                          builder: (contextCod) {
+                                            return Container(
+                                              height: 350,
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Text(
+                                                    "EXP1234FAUSTA",
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 26,
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 15,
+                                                  ),
+                                                  Text(
+                                                    "Você deve mostrar esse código na escola para retirar seus produtos!",
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      // fontSize: 26,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      } else {
+                                        finish(context);
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                            content: Text(
+                                              "Você não possui saldo suficiente para finalizar a compra.",
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            backgroundColor: Colors.red,
+                                          ),
+                                        );
+                                      }
+                                    },
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      padding: EdgeInsets.all(12),
+                                      width: double.maxFinite,
+                                      decoration: BoxDecoration(
+                                        color: Colors.green,
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: Text(
+                                        "COMPRAR",
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      finish(context);
+                                    },
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      padding: EdgeInsets.all(12),
+                                      width: double.maxFinite,
+                                      decoration: BoxDecoration(
+                                        color: Colors.red,
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: Text(
+                                        "FECHAR",
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ),
+                                  )
+                                ],
                               ),
                             )
                           ],
@@ -202,7 +317,7 @@ class _HomeState extends State<Home> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "100,00",
+                        "R\$ ${saldo.toString().replaceAll(".0", ",00")}",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 18,

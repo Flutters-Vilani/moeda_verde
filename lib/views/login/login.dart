@@ -1,6 +1,7 @@
 // import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:moeda_verde/teste.dart';
+import 'package:moeda_verde/views/adm/adm.dart';
 // import 'package:moeda_verde/views/home/home.dart';
 import 'package:moeda_verde/views/utils/input.dart';
 
@@ -83,8 +84,14 @@ class _LoginState extends State<Login> {
             GestureDetector(
               onTap: () {
                 // autentica(nome.text, senha.text);
-                Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (ctx) => Home()));
+
+                if (nome.text == "admin" || nome.text == "Admin") {
+                  Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (ctx) => AdmScreen()));
+                } else {
+                  Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (ctx) => Home()));
+                }
               },
               child: Container(
                 alignment: Alignment.center,
