@@ -187,8 +187,11 @@ class _HomeState extends State<Home> {
                                           ),
                                           builder: (contextCod) {
                                             return Container(
+                                              alignment: Alignment.center,
                                               height: 350,
                                               child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
                                                 children: [
@@ -377,7 +380,11 @@ class _HomeState extends State<Home> {
           ),
           BottomNavigationBarItem(
             label: "",
-            icon: Icon(Icons.settings),
+            icon: GestureDetector(
+                onTap: () {
+                  print("teste");
+                },
+                child: Icon(Icons.settings)),
           ),
         ],
       ),

@@ -67,6 +67,10 @@ class _LoginState extends State<Login> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Image.asset(
+              "assets/logo.jpeg",
+              height: 300,
+            ),
             Input(
               controller: nome,
               hintText: 'Nome',
